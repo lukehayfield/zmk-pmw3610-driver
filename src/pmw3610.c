@@ -515,6 +515,12 @@ static int pmw3610_report_data(const struct device *dev) {
         } else if (config->rotation_degrees == -15) {
             cos_val = 15821;
             sin_val = -4240;
+        } else if (config->rotation_degrees == 13) {
+            cos_val = 15976;
+            sin_val = 3686;
+        } else if (config->rotation_degrees == -13) {
+            cos_val = 15976;
+            sin_val = -3686;
         } else if (config->rotation_degrees == 10) {
             cos_val = 16135;
             sin_val = 2844;
