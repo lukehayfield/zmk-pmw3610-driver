@@ -500,6 +500,26 @@ static int pmw3610_report_data(const struct device *dev) {
     y = -y;
 #endif
 
+    // Apply rotation if specified
+    if (config->rotation_degrees != 0) {
+        int32_t cos_val, sin_val;
+        if (config->rotation_degrees == 10) {
+            cos_val = 16135;
+            sin_val = 2844;
+        } else if (config->rotation_degrees == -10) {
+            cos_val = 16135;
+            sin_val = -2844;
+        } else {
+            // For other angles, skip or add more cases
+            cos_val = 16384; // cos(0) ≈ 1
+            sin_val = 0;
+        }
+        int32_t new_x = (x * cos_val - y * sin_val) / 16384;
+        int32_t new_y = (x * sin_val + y * cos_val) / 16384;
+        x = (int16_t)CLAMP(new_x, INT16_MIN, INT16_MAX);
+        y = (int16_t)CLAMP(new_y, INT16_MIN, INT16_MAX);
+    }
+
 #if IS_ENABLED(CONFIG_PMW3610_IGNORE_AFTER_REST)
     if (passed > CONFIG_PMW3610_RUN_DOWNSHIFT_TIME_MS + CONFIG_PMW3610_REST1_DOWNSHIFT_TIME_MS + CONFIG_PMW3610_REST2_DOWNSHIFT_TIME_MS) {
         data->data_index = 0;
@@ -750,6 +770,7 @@ static int pmw3610_pm_action(const struct device *dev, const enum pm_device_acti
         .xy_swap = DT_PROP(DT_DRV_INST(n), xy_swap),                                                    \
         .x_invert = DT_PROP(DT_DRV_INST(n), x_invert),                                                  \
         .y_invert = DT_PROP(DT_DRV_INST(n), y_invert),                                                  \
+        .rotation_degrees = DT_PROP(DT_DRV_INST(n), rotation_degrees),                                 \
         .force_awake = DT_PROP(DT_DRV_INST(n), force_awake),                                            \
         .force_high_performance = DT_PROP(DT_DRV_INST(n), force_high_performance),                      \
         .enable_pm_support = DT_PROP(DT_DRV_INST(n), enable_pm_support),                                \

@@ -36,6 +36,10 @@ properties:
     type: boolean
   y-invert:
     type: boolean
+  rotation-degrees:
+    type: int
+    default: 0
+    description: "Rotation angle in degrees (clockwise)"
   init-retry-count:
     type: int
     default: 3

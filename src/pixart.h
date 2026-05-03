@@ -53,6 +53,7 @@ struct pixart_config {
     bool xy_swap;
     bool x_invert;
     bool y_invert;
+    int rotation_degrees;
     bool force_awake;
     bool force_high_performance;
     bool enable_pm_support;
